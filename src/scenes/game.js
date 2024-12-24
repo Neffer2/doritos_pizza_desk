@@ -1,4 +1,4 @@
-const VELOCITY = 480;
+const VELOCITY = 600;
 // Useful vars
 let width, height, mContext, floor, player, elemsFall = [],
     scoreText, liveText, timeText, elemsInterval, time = 60, timeInterval, loose = false, gameOver = false,
@@ -101,14 +101,14 @@ export class Game extends Phaser.Scene {
         player.anims.create({
             key: 'run_left',
             frames: this.anims.generateFrameNumbers('player_run_left', { start: 0, end: 11 }),
-            frameRate: 15,
+            frameRate: 25,
             repeat: 1
         });
 
         player.anims.create({
             key: 'run_right',
             frames: this.anims.generateFrameNumbers('player_run_right', { start: 0, end: 11 }),
-            frameRate: 15,
+            frameRate: 25,
             repeat: 1
         });
 
@@ -174,7 +174,7 @@ export class Game extends Phaser.Scene {
         player.body.checkCollision.left = false;            
         player.body.checkCollision.right = false;            
         player.score = 0;
-        player.lives = 2;
+        player.lives = 3;
         player.setCollideWorldBounds(true);
 
         let livesBg = this.add.image((width/6), 80, 'lives-bg').setDepth(1);
@@ -192,17 +192,20 @@ export class Game extends Phaser.Scene {
 
     hitElem(player, elem){
         if (elem.texture.key === 'dorito' && !loose){
-            player.score += 1;
+            player.score += 5;
             scoreText.setText(player.score+" PTS");
         }else {
             loose = !loose;
+            player.lives -= 1;
+            liveText.setText(player.lives);
+            player.score = ((player.score - 10) <= 0) ? 0 : player.score -= 10;
+            scoreText.setText(player.score+" PTS");
+            player.anims.play('fall', true);
+
             if (player.lives == 0) { 
                 gameOver = true;
                 mContext.popUp();
             }
-            player.lives -= 1;
-            liveText.setText(player.lives);
-            player.anims.play('fall', true);
 
             setTimeout(() => {loose = !loose;}, 1000);
         }
