@@ -1,0 +1,29 @@
+@font-face {
+    font-family: 'primary-font';
+    src: url('../assets/fonts/DoritosHeadline_BlkIt.ttf');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: 'primary-font', sans-serif;
+    height: 100%;
+}
+
+body {
+    background-color: #fff;
+}
+
+canvas {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+#game-container {
+    display: flex;
+    align-items: center;
+}
