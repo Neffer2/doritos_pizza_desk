@@ -194,11 +194,12 @@ export class Game extends Phaser.Scene {
         if (elem.texture.key === 'dorito' && !loose){
             player.score += 5;
             scoreText.setText(player.score+" PTS");
-        }else {
+        }else if(!loose) {
             loose = !loose;
-            player.lives -= 1;
+            player.lives -= 1;        
             liveText.setText(player.lives);
             player.score = ((player.score - 10) <= 0) ? 0 : player.score -= 10;
+
             scoreText.setText(player.score+" PTS");
             player.anims.play('fall', true);
 
@@ -207,7 +208,13 @@ export class Game extends Phaser.Scene {
                 mContext.popUp();
             }
 
-            setTimeout(() => {loose = !loose;}, 1000);
+            setTimeout(() => {loose = !loose;}, 2000);
+        }
+
+        if (player.score > 9 && player.score < 100) {
+            scoreText.x = (60);
+        }else if (player.score > 99) {
+            scoreText.x = (45);
         }
 
         elemsFall.splice(elemsFall.indexOf(elem), 1);
@@ -215,7 +222,9 @@ export class Game extends Phaser.Scene {
     }
 
     popUp(){
+        clearInterval(timeInterval);
         clearInterval(elemsInterval);
+        mContext.deleteElems();
         let bg = this.add.image(0, 0, 'background_tutorial').setOrigin(0, 0).setDepth(1);
         let title = this.add.image(width/4, (height/2), 'title-score').setScale(1.4).setDepth(1);
         const fxShadow = title.preFX.addShadow(0, 0, 0.006, 2, 0x333333, 10);
@@ -229,5 +238,11 @@ export class Game extends Phaser.Scene {
         let score2 = this.add.text((width/2) + 320, ((score.height) + 230), scoreText2, {font: '80px primary-font', fill: '#00cb9b', align: "center"}).setOrigin(0.5).setDepth(1);
 
         let footer = this.add.image(width/2, (height - 100), 'title-footer').setDepth(1);
+    }
+
+    deleteElems(){
+        elemsFall.forEach(elem => {
+            elem.disableBody(false, false);
+        });
     }
 }   
